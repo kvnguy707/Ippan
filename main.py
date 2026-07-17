@@ -1,4 +1,4 @@
-import customtkinter as ctkfrom core_engine 
+import customtkinter as ctk
 import Card, Deck, Player 
 from data_handler import load_leaderboard, save_points
 import daifugo
