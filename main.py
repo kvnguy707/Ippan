@@ -96,17 +96,20 @@ class MainApplication(ctk.CTk):
     self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
     self.back_button.pack(pady=20)
 
-  def create_leaderboard_widgets(self):
-    # Renders data layer records from data_handler.
-    self.title_label = ctk.CTkLabel(self, text="Global Leaderboard", font=("Arial", 24))
-    self.title_label.pack(pady=20)
-    
-    # Placeholder displaying structural data hooks
-    self.info_label = ctk.CTkLabel(self, text="[Rankings parsed dynamically from data_handler.py]", font=("Arial", 14))
-    self.info_label.pack(pady=20)
-
-    self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
-    self.back_button.pack(pady=10)
+def create_leaderboard_widgets(self):
+  # Import inside the method to keep main load times lightweight
+  from leaderboard import Leaderboard
+  lb = Leaderboard()
+  # Renders data layer records
+  self.title_label = ctk.CTkLabel(self, text="Global Leaderboard", font=("Arial", 24))
+  self.title_label.pack(pady=20)
+  # Loop through entries and cleanly display top rows dynamically
+  for player in lb.entries[:5]: 
+    lbl = ctk.CTkLabel(self, text=f"Rank {player.get('rank', '-')}: {player.get('name', 'Unknown')} — {player.get('score', 0)} pts")
+    lbl.pack(pady=4)
+  # Back button goes cleanly at the bottom
+  self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
+  self.back_button.pack(pady=20)
 
   def create_shop_widgets(self):
     # Renders transactional interface layer details.
