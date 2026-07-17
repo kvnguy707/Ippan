@@ -22,37 +22,37 @@ screen_routes = {
 }
 
 class MainApplication(ctk.CTk):
-  # The main application class that acts as the window and coordinates screen states.
+  # The main application class that acts as the window and coordinates screen states
   def __init__(self, player_data=None):
     super().__init__()
     
-    # initialise player data (fall back to default if none)
+    # Initialise player data (fall back to default if none)
     if player_data:
       self.player_data = player_data 
     else:
       self.player_data = {"player_id": "P001", "points": 100}
     self.validate_player_data()
     
-    # navigation & window state configurations
+    # Navigation & window state configurations
     self.current_screen = "menu"
     self.screen_history = []
     self.window_width = 800
     self.window_height = 600
     
     self.setup_window()
-    self.render_current_screen()  # Upgraded from direct static call
+    self.render_current_screen()
 
   def setup_window(self):
     self.title("Card Game Hub")
     self.geometry(f"{self.window_width}x{self.window_height}")
 
   def clear_window(self):
-    #Helper method to completely clear the UI before drawing a new view.
+    # Helper method to completely clear the UI before drawing a new view
     for widget in self.winfo_children():
       widget.destroy()
 
   def render_current_screen(self):
-    # Dynamic routing hub that decides which interface to render visually.
+    # Dynamic routing hub that decides which interface to render visually
     self.clear_window()
     
     if self.current_screen == "menu":
@@ -64,8 +64,10 @@ class MainApplication(ctk.CTk):
     elif self.current_screen == "shop":
       self.create_shop_widgets()
 
+  # ––– Main Menu Screen –––
+  
   def create_menu_widgets(self):
-    # Renders the primary Main Menu screen view.
+    # Renders the primary Main Menu screen view
     self.title_label = ctk.CTkLabel(self, text="Main Menu", font=("Arial", 24))
     self.title_label.pack(pady=20)
     
@@ -78,12 +80,14 @@ class MainApplication(ctk.CTk):
     self.shop_button = ctk.CTkButton(self, text="Shop", command=self.go_to_shop)
     self.shop_button.pack(pady=10)
 
+  # ––– Game Selection –––
+  
   def create_game_selection_widgets(self):
-    # Renders the interface showcasing your 4 core available card games.
+    # Renders the interface showcasing your 4 core available card games
     self.title_label = ctk.CTkLabel(self, text="Select a Card Game", font=("Arial", 24))
     self.title_label.pack(pady=20)
 
-    # Creating buttons for your structural game components
+    # Creating buttons for structural game components
     for game_key, game_name in menu_options.items():
       if game_key in ["1", "2", "3", "4"]: # Filter only actual gameplay types
         btn = ctk.CTkButton(
@@ -96,6 +100,8 @@ class MainApplication(ctk.CTk):
     self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
     self.back_button.pack(pady=20)
 
+  # ––– Leaderboard GUI –––
+  
   def create_leaderboard_widgets(self):
     # Import inside the method to keep main load times lightweight
     from leaderboard import Leaderboard
@@ -110,17 +116,57 @@ class MainApplication(ctk.CTk):
 
     self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
     self.back_button.pack(pady=20)
+
+  # ––– Shop GUI –––
   
   def create_shop_widgets(self):
-    # Renders transactional interface layer details.
+    from shop import default_shop_data
     self.title_label = ctk.CTkLabel(self, text="U-Choose Custom Shop", font=("Arial", 24))
     self.title_label.pack(pady=20)
-    
     self.balance_label = ctk.CTkLabel(self, text=f"Your Balance: {self.player_data['points']} Points", font=("Arial", 16))
     self.balance_label.pack(pady=10)
-  
+    self.status_label = ctk.CTkLabel(self, text="", font=("Arial", 12), text_color="green")
+    self.status_label.pack(pady=5)
+    
+    # Dynamic GUI generation 
+    for item_id, item in default_shop_data["shop_items"].items():
+      frame = ctk.CTkFrame(self)
+      frame.pack(pady=8, fill="x", padx=40)
+      # Displaying Item name, type, price, and description line items
+      text_info = f"{item['name']} ({item['type'].capitalize()})\n— {item['description']} —"
+      lbl = ctk.CTkLabel(frame, text=text_info, font=("Arial", 13), justify="left")
+      lbl.pack(side="left", padx=20, pady=10)
+      # Price tag badge element display helper
+      price_lbl = ctk.CTkLabel(frame, text=f"{item['price']} pts", font=("Arial", 13, "bold"))
+      price_lbl.pack(side="right", padx=10)
+      # GUI button for purchases
+      btn = ctk.CTkButton(frame, text="Buy", width=80, command=lambda target_item=item_id: self.execute_shop_purchase(i))
+      btn.pack(side="right", padx=10, pady=10)
+
     self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
     self.back_button.pack(pady=20)
+
+  # GUI for showing successful purchases and shop GUI
+  def execute_shop_purchase(self, target_id):
+    from shop import default_shop_data, purchase_item
+    result = purchase_item(self.player_data["player_id"], target_id)
+    # Change status color to red if purchase fails 
+    if "successful" in result:
+      self.status_label.configure(text=result, text_color="green")
+      self.player_data["points"] -= default_shop_data["shop_items"][target_id]["price"]
+      self.balance_label.configure(text=f"Your Balance: {self.player_data['points']} Points")
+    else:
+      self.status_label.configure(text=result, text_color="red") 
+  
+    if __name__ == "__main__":
+      from shop import initialise_database
+      # Run the database check first to ensure safety
+      initialise_database()
+      # Boot up the window application loop
+      app = MainApplication()
+      app.mainloop()
+
+  # ––– Window Management –––
   
   def change_screen(self, new_screen):
     if self.current_screen != new_screen:
@@ -155,18 +201,18 @@ class MainApplication(ctk.CTk):
   
   
   def start_game(game_id, player_id, mode):
-    # game initialisation wrapper function
+    # Game initialisation wrapper function
     print(f"initialising {game_id} for {player_id} in mode: {mode}")
     # Realising OOP components during initialisations:
-    # game_deck = Deck()
-    # active_player = Player(player_id)
+      # game_deck = Deck()
+      # active_player = Player(player_id)
 
 
 if __name__ == "__main__":
-  # ensure customtkinter styling is set correctly
+  # Ensure customtkinter styling is set correctly
   ctk.set_appearance_mode("system")
   ctk.set_default_color_theme("blue")
   
-  # instantiate and launch the functional application
+  # Instantiate and launch the functional application
   app = MainApplication()
   app.mainloop()
