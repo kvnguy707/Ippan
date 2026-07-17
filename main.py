@@ -103,19 +103,27 @@ class MainApplication(ctk.CTk):
   # ––– Leaderboard GUI –––
   
   def create_leaderboard_widgets(self):
-    # Import inside the method to keep main load times lightweight
     from leaderboard import Leaderboard
     lb = Leaderboard()
-    # Renders data layer records
-    self.title_label = ctk.CTkLabel(self, text="Global Leaderboard", font=("Arial", 24))
+    self.title_label = ctk.CTkLabel(self, text="Global Leaderboard", font=("Arial", 24, "bold"))
     self.title_label.pack(pady=20)
+    # Dictionary mapping top ranks to custom podium colors
+    podium_colors = {1: "#FFD700", 2: "#C0C0C0", 3: "#CD7F32"}
     # Loop through entries and cleanly display top rows dynamically
     for player in lb.entries[:5]: 
-      lbl = ctk.CTkLabel(self, text=f"Rank {player.get('rank', '-')}: {player.get('name', 'Unknown')} — {player.get('score', 0)} pts")
-      lbl.pack(pady=4)
+      rank = player.get("rank", "-")
+      name = player.get("name", "Unknown")
+      points = player.get("points", 0)
+      text_display = f"Rank {rank}: {name} — {points} pts"
+      # Add-on: Dynamic color selection for the podium rankings
+      text_color = podium_colors.get(rank, "white")
+      font_style = ("Arial", 14, "bold") if rank in podium_colors else ("Arial", 14)
+      
+      lbl = ctk.CTkLabel(self, text=text_display, font=font_style, text_color=text_color)
+      lbl.pack(pady=6)
 
     self.back_button = ctk.CTkButton(self, text="← Back to Menu", fg_color="gray", command=self.go_back)
-    self.back_button.pack(pady=20)
+    self.back_button.pack(pady=25)
 
   # ––– Shop GUI –––
   
