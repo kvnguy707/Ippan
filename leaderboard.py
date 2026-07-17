@@ -33,16 +33,16 @@ class Leaderboard:
         save_data(self.entries)
         return
         
-      # Append new entry if no duplicate ID was discovered
-      self.entries.append({
-        "player_id": player_id,
-        "name": name,
-        "score": score,
-        "rank": 0,
-        "reward": "None"
-      })
-      self.update_rankings()
-      save_data(self.entries)
+    # Append new entry if no duplicate ID was discovered
+    self.entries.append({
+      "player_id": player_id,
+      "name": name,
+      "score": score,
+      "rank": 0,
+      "reward": "None"
+    })
+    self.update_rankings()
+    save_data(self.entries)
 
   def update_rankings(self):
     # Algorithmic sorting based on player performance metrics
