@@ -23,7 +23,7 @@ default_shop_data = {
   "player_inventory": []
 }
 
-def initialize_database():
+def initialise_database():
   # Ensures players.json exists with a valid default structure on startup.
   file_path = "players.json"
   
@@ -33,7 +33,7 @@ def initialize_database():
       {
         "player_id": "P001",
         "name": "Ace",
-        "score": 1200,
+        "points": 1200,
         "wins": 5,
         "games": 10,
         "rank": 1,
@@ -43,7 +43,7 @@ def initialize_database():
       {
         "player_id": "CPU_Easy",
         "name": "Charly Bot",
-        "score": 450,
+        "points": 450,
         "wins": 1,
         "games": 8,
         "rank": 2,
@@ -53,7 +53,7 @@ def initialize_database():
     ]
     with open(file_path, "w") as file:
       json.dump(default_data, file, indent=4)
-    print("[System] Database initialized successfully with default records.")
+    print("[System] Database initialised successfully with default records.")
 
 def purchase_item(player_id, item_id):
   # Safely retrieve local database records from the disk file
