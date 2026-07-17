@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Local runtime player files 
+players.json
+
+
 # C extensions
 *.so
 
