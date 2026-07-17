@@ -1,5 +1,23 @@
 import json
 
+# Example leaderboard
+leaderboard = {
+  "P001": {
+    "username": "Alice",
+    "points": 1500,
+    "games_played": 25,
+    "wins": 15,
+    "rank": 1
+  },
+  "P002": {
+    "username": "Bob",
+    "points": 1200,
+    "games_played": 30,
+    "wins": 10,
+    "rank": 2
+  }
+}
+
 def save_data(data):
   # Safely write updated database records to the disk file
   with open("players.json", "w") as file:
