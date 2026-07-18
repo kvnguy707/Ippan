@@ -1,5 +1,5 @@
 # System Architecture & Data Structures
-This file documents how data changes state over time and how your code evolved across development cycles.
+This file documents how data changes state over time and how the code evolved across development cycles.
 
 ## Player JSON Database File (`game_management/players.json`)
 
