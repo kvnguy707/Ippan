@@ -1,6 +1,7 @@
 # GUI Design and 
 ## U-Choose Shop Design
 The shop interface utilises a centralised `ctk.CTkFrame` structure. At the top, a prominent balance banner displays the active player's profile ID and their live wallet balance. Individual inventory items are rendered dynamically inside separate horizontal row frames (`fill="x"`). Each row showcases the item title, a categorised utility badge, a brief descriptive text string, and an aligned checkout button. Below is a flowchart of the shop's navigation.
+
 ```mermaid
 graph TD
 A[Main Menu] --> |Click 'U-Choose Shop'| B(Open Shop Window)
@@ -61,6 +62,31 @@ Overall, Tkinter and CustomTkinter provide the necessary tools to implement a re
 The GUI retrieves player data from the leaderboard structure and item data from a predefined dictionary. When a purchase is attempted, the system validates whether the player has sufficient points. If valid, the transaction is processed, updating both the player’s points and their owned items
 
 
-
 ## Leaderboard Design
-The leaderboard UI presents an arcade-style standings dashboard. The interface reads local JSON entry collections and populates a vertical stack of rank labels. The Top 3 ranking podium rows feature bold typography treatments and custom hex colour codes (#FFD700, #C0C0C0, #CD7F32) to establish a clear visual hierarchy.
+The leaderboard UI presents an arcade-style standings dashboard. The interface reads local JSON entry collections and populates a vertical stack of rank labels. The Top 3 ranking podium rows feature bold typography treatments and custom hex colour codes (#FFD700, #C0C0C0, #CD7F32) to establish a clear visual hierarchy. 
+* This allows users to quickly identify their position within the rankings without scanning the entire table. 
+* Spacing and alignment are carefully managed to ensure readability, particularly when displaying multiple players.
+* Allows for visually impared users to clearly see rankings in an easy way.
+
+```mermaid
+graph TD
+A[Main Menu] --> |Click 'Leaderboard'| B(Open Leaderboard Window)
+B --> C[Dynamic Standings Container]
+C --> D[Rank 1: Gold Highlight Label]
+C --> E[Rank 2: Silver Highlight Label]
+C --> F[Rank 3: Bronze Highlight Labels]
+```
+
+The leaderboard GUI is designed to present player rankings in a clear, interactive, and visually structured format. Its primary purpose is to display player performance data, including points accumulated across all games, while also allowing users to easily interpret rankings and track progression over time.
+
+* The layout of the leaderboard is based on a tabular structure, where each row represents an individual player and each column displays a specific attribute. 
+* Key fields include the player's username or ID, total points, number of games played, and number of wins. 
+* The table is organised in descending order of points, ensuring that the highest-ranking players are displayed at the top. 
+* This sorting is performed dynamically before rendering, ensuring that the displayed data always reflects the most recent updates stored in the system.
+* The GUI includes a title header, clearly labelling the screen as the leaderboard, along with navigation controls such as a "Back" button that allows the user to return to the main menu. 
+* This button interacts with the `screen_history` structure defined in the main window, reinforcing consistency in navigation design across the application.
+* The design also supports real-time updates, meaning that after a game is completed, any changes to player points are immediately reflected when the leaderboard is accessed. This ensures consistency between gameplay outcomes and displayed rankings, improving the overall responsiveness of the system.
+* In terms of scalability, the GUI is designed to handle varying numbers of players. If the number of entries exceeds the visible space, a scrolling mechanism can be implemented to allow users to navigate through the full list. This ensures that the interface remains functional regardless of the size of the dataset.
+
+---
+Overall, the leaderboard GUI combines structured data presentation with interactive elements to create an intuitive and efficient user experience. Its design aligns closely with the underlying data structures and control systems of the application, ensuring that data is accurately retrieved, processed, and displayed. This contributes to both the usability and reliability of the Ippan system, making it easier for users to engage with and understand their progress within the game.
